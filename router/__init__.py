@@ -1,0 +1,1 @@
+from .smart_router import route
