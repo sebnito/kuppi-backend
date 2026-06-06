@@ -1,11 +1,12 @@
 from llm.model_manager import ModelManager
+from llm.kuppi_personality import build_prompt
 
 manager = ModelManager()
 
 def ask(model_name: str, user_input: str, stream: bool = False):
 
     manager.load_model(model_name)
-    prompt = f"<|im_start|>user\n{user_input}\n<|im_end|>\n<|im_start|>assistant\n"
+    prompt = build_prompt(user_input)
 
     if stream:
         print("Kuppi: ", end="", flush=True)
