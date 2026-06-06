@@ -1,0 +1,36 @@
+from llm.model_manager import ModelManager
+
+manager = ModelManager()
+
+def ask(model_name: str, user_input: str, stream: bool = False):
+
+    manager.load_model(model_name)
+    prompt = f"<|im_start|>user\n{user_input}\n<|im_end|>\n<|im_start|>assistant\n"
+
+    if stream:
+        print("Kuppi: ", end="", flush=True)
+
+        full_text = ""
+        
+        for chunk in manager.generate(prompt, stream=True):
+            token = chunk["choices"][0]["delta"].get("text", "")
+            print(token, end="", flush=True)  # print each token as it arrives
+            full_text += token
+
+        print()  # new line when done
+        return full_text
+    else:
+        result = manager.generate_response(prompt, stream=False)
+        print(f"Kuppi: {result['text']}")
+        return result["text"]
+
+if __name__ == "__main__":
+    while True:
+        model_name = input("Choose a model (e.g., 'typhoon', 'qwen'): ")
+        user_input = input("You: ")
+        if user_input.lower() in {"exit"}:
+            print("Goodbye!")
+            break
+
+        response = ask(model_name, user_input, stream=True)
+        print(response)

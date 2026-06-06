@@ -4,7 +4,7 @@ class ModelManager:
 
     #static variable
     MODEL_PATH = {
-        "qwen2.5": "models/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+        "qwen": "models/qwen2.5-1.5b-instruct-q4_k_m.gguf",
         "typhoon": "models/llama3.2-typhoon2-t1-3b-q4_k_m.gguf",
     }
     current_model_name = None
@@ -46,14 +46,23 @@ class ModelManager:
         if not self.current_model:
             raise RuntimeError("No model is currently loaded.")
         
-        output = self.current_model(prompt,
-            max_tokens=2048,
-            temperature=0.7,
-            top_p=0.9,
-            stop=["\n\n"],
-        ).choices[0].text.strip()
+        output = self.current_model(
+        prompt,
+        max_tokens=512,
+        stop=["</s>", "<|im_end|>"],
+        echo=False,
+        stream=stream,
+        )
 
-        return output
+        if stream:
+            return output  # Return the generator for streaming
+        else:
+            return {
+                "text": output["choices"][0]["text"].strip(),
+                "tokens_used": output["usage"]["completion_tokens"],  # for Wh calculation
+                "model": self.current_model_name,
+            }
+        
 
     
 
