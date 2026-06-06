@@ -3,9 +3,9 @@ from llama_cpp import Llama
 class ModelManager:
 
     #static variable
-    MODEL_PATH = {
-        "qwen": "models/qwen2.5-1.5b-instruct-q4_k_m.gguf",
-        "typhoon": "models/llama3.2-typhoon2-t1-3b-q4_k_m.gguf",
+    MODEL_PATHS = {
+        "qwen": "llm/models/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+        "typhoon": "llm/models/llama3.2-typhoon2-t1-3b-q4_k_m.gguf",
     }
     current_model_name = None
     current_model = None
@@ -42,7 +42,7 @@ class ModelManager:
             self.current_model = None
             self.current_model_name = None
 
-    def generate_response(self, prompt: str, stream: bool = False):
+    def generate(self, prompt: str, stream: bool = False):
         if not self.current_model:
             raise RuntimeError("No model is currently loaded.")
         

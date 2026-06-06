@@ -13,14 +13,14 @@ def ask(model_name: str, user_input: str, stream: bool = False):
         full_text = ""
         
         for chunk in manager.generate(prompt, stream=True):
-            token = chunk["choices"][0]["delta"].get("text", "")
-            print(token, end="", flush=True)  # print each token as it arrives
+            token = chunk["choices"][0]["text"]
+            print(token, end="", flush=True)
             full_text += token
 
         print()  # new line when done
         return full_text
     else:
-        result = manager.generate_response(prompt, stream=False)
+        result = manager.generate(prompt, stream=False)
         print(f"Kuppi: {result['text']}")
         return result["text"]
 
