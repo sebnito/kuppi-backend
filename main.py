@@ -13,6 +13,7 @@ def ask(model_name: str, user_input: str, stream: bool = False):
         full_text = ""
         
         for chunk in manager.generate(prompt, stream=True):
+            print(chunk)
             token = chunk["choices"][0]["text"]
             print(token, end="", flush=True)
             full_text += token
